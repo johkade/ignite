@@ -3,6 +3,7 @@ import { filesystem, GluegunToolbox, strings } from "gluegun"
 import { Options } from "gluegun/build/types/domain/options"
 import * as sharp from "sharp"
 import { command, direction, heading, igniteHeading, p, warning } from "./pretty"
+import config from '../../ignite.config'
 
 export function runGenerator(
   toolbox: GluegunToolbox,
@@ -131,7 +132,7 @@ function igniteDir() {
 
 function appDir() {
   const cwd = process.cwd()
-  return filesystem.path(cwd, "app")
+  return filesystem.path(cwd, config.appDirectoryName)
 }
 
 function templatesDir() {

@@ -1,6 +1,6 @@
 import { GluegunToolbox } from "../types"
 import { spawnProgress } from "../tools/spawn"
-import { isAndroidInstalled, copyBoilerplate, renameReactNativeApp } from "../tools/react-native"
+import { isAndroidInstalled, copyBoilerplate, renameReactNativeApp, renameAppDirectory } from "../tools/react-native"
 import { packager } from "../tools/packager"
 import {
   command,
@@ -170,6 +170,9 @@ export default {
 
     // jump into the project to do additional tasks
     process.chdir(projectName)
+
+    // rename the app directory to whatever is specified in ignite.config.ts
+    await renameAppDirectory(toolbox, { rootDirectory: process.cwd() })
 
     // copy the .gitignore if it wasn't copied over
     // Release Ignite installs have the boilerplate's .gitignore in .gitignore.template

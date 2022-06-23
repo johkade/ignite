@@ -1,5 +1,6 @@
 import { GluegunToolbox } from "gluegun"
 import { children } from "./filesystem-ext"
+import config from "../../ignite.config"
 
 export const isAndroidInstalled = (toolbox: GluegunToolbox): boolean => {
   const androidHome = process.env.ANDROID_HOME
@@ -41,6 +42,31 @@ export async function copyBoilerplate(toolbox: GluegunToolbox, options: CopyBoil
 
   // copy them all at once
   return Promise.all(copyPromises)
+}
+
+type RenameAppDirectoryOptions = {
+  rootDirectory: string
+}
+
+export async function renameAppDirectory(toolbox: GluegunToolbox, options: RenameAppDirectoryOptions) {
+  const { filesystem } = toolbox
+  const { rootDirectory } = options
+
+  if (config.appDirectoryName !== "apps") {
+    const defaultAppDirectoryPath = `${rootDirectory}/app`
+    const newAppDirectoryPath = config.appDirectoryName
+    await filesystem.renameAsync(defaultAppDirectoryPath, newAppDirectoryPath)
+  }
+
+  const packageJsonPath = filesystem.path(rootDirectory, "package.json")
+  const packageJsonContent = await filesystem.readAsync(packageJsonPath, "utf8")
+  const newPackageJsonContent = packageJsonContent
+    .replace(/app\/\*\*\/\*/g, `${config.appDirectoryName}/**/*`)
+
+  // write the new content back to the file
+  await filesystem.writeAsync(packageJsonPath, newPackageJsonContent, { atomic: true })
+
+  return true
 }
 
 export async function renameReactNativeApp(
