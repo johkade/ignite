@@ -8,6 +8,10 @@
     "android": "react-native run-android",
     "compile": "tsc --noEmit -p . --pretty",
     "format": "npm run format:js && npm run format:json && npm run format:md && npm run format:ts",
+    "format:js": "prettier --write \"app/**/*.js\"",
+    "format:json": "prettier --write \"app/**/*.json\"",
+    "format:md": "prettier --write \"**/*.md\"",
+    "format:ts": "prettier --write \"app/**/*.ts{,x}\"",
     "lint": "eslint index.js app test --fix --ext .js,.ts,.tsx && npm run format",
     "patch": "patch-package",
     "test": "jest",
@@ -102,8 +106,8 @@
   },
   "prettier": {
     "printWidth": 100,
-    "semi": false,
-    "singleQuote": false,
+    "semi": true,
+    "singleQuote": true,
     "trailingComma": "all"
   },
   "detox": {
@@ -186,7 +190,7 @@
       "no-undef": 0,
       "no-unused-vars": 0,
       "no-use-before-define": "off",
-      "quotes": 0,
+      "quotes": 1,
       "react-native/no-raw-text": 0,
       "react/no-unescaped-entities": 0,
       "react/prop-types": "off",
