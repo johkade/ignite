@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react"
-import { BackHandler } from "react-native"
 import {
-  PartialState,
-  NavigationState,
-  NavigationAction,
   createNavigationContainerRef,
+  NavigationAction,
+  NavigationState,
+  PartialState,
 } from "@react-navigation/native"
+import { useEffect, useRef } from "react"
+import { BackHandler } from "react-native"
 
 /* eslint-disable */
 export const RootNavigation = {
@@ -77,52 +77,6 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
     // Unsubscribe when we're done
     return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress)
   }, [])
-}
-
-/**
- * Custom hook for persisting navigation state.
- */
-export function useNavigationPersistence(storage: any, persistenceKey: string) {
-  const [initialNavigationState, setInitialNavigationState] = useState()
-
-  // This feature is particularly useful in development mode.
-  // It is selectively enabled in development mode with
-  // the following approach. If you'd like to use navigation persistence
-  // in production, remove the __DEV__ and set the state to false
-  const [isRestored, setIsRestored] = useState(!__DEV__)
-
-  const routeNameRef = useRef<string | undefined>()
-
-  const onNavigationStateChange = (state) => {
-    const previousRouteName = routeNameRef.current
-    const currentRouteName = getActiveRouteName(state)
-
-    if (previousRouteName !== currentRouteName) {
-      // track screens.
-      __DEV__ && console.tron.log(currentRouteName)
-    }
-
-    // Save the current route name for later comparision
-    routeNameRef.current = currentRouteName
-
-    // Persist state to storage
-    storage.save(persistenceKey, state)
-  }
-
-  const restoreState = async () => {
-    try {
-      const state = await storage.load(persistenceKey)
-      if (state) setInitialNavigationState(state)
-    } finally {
-      setIsRestored(true)
-    }
-  }
-
-  useEffect(() => {
-    if (!isRestored) restoreState()
-  }, [isRestored])
-
-  return { onNavigationStateChange, restoreState, isRestored, initialNavigationState }
 }
 
 /**

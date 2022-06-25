@@ -4,7 +4,7 @@ import React, { FC } from "react"
 import { Text, View, ViewStyle } from "react-native"
 import { NavigatorParamList } from "../../navigators"
 
-const FULL: ViewStyle = { flex: 1 }
+const FULL: ViewStyle = { flex: 1, backgroundColor: "#2af" }
 
 export const WelcomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = observer(
   ({ navigation }) => {
